@@ -1,0 +1,17 @@
+L:\Code\FileDownloader\bin\Debug\net6.0\FileDownloader.exe
+L:\Code\FileDownloader\bin\Debug\net6.0\FileDownloader.deps.json
+L:\Code\FileDownloader\bin\Debug\net6.0\FileDownloader.runtimeconfig.json
+L:\Code\FileDownloader\bin\Debug\net6.0\FileDownloader.dll
+L:\Code\FileDownloader\bin\Debug\net6.0\FileDownloader.pdb
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.csproj.AssemblyReference.cache
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.GeneratedMSBuildEditorConfig.editorconfig
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.AssemblyInfoInputs.cache
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.AssemblyInfo.cs
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.csproj.CoreCompileInputs.cache
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.dll
+L:\Code\FileDownloader\obj\Debug\net6.0\refint\FileDownloader.dll
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.pdb
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.genruntimeconfig.cache
+L:\Code\FileDownloader\obj\Debug\net6.0\ref\FileDownloader.dll
+L:\Code\FileDownloader\bin\Debug\net6.0\Newtonsoft.Json.dll
+L:\Code\FileDownloader\obj\Debug\net6.0\FileDownloader.csproj.CopyComplete

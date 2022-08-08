@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="GenshinPatchTools">
+        <HintPath>..\GenshinPatchTools\bin\Debug\net6.0-windows\GenshinPatchTools.dll</HintPath>
+      </Reference>
+      <Reference Include="GenshinTools">
+        <HintPath>..\GenshinTools\bin\Debug\net6.0-windows\GenshinTools.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
