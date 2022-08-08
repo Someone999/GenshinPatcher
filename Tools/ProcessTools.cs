@@ -1,24 +1,22 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Security.Principal;
 
 namespace GenshinPatcher.Tools;
 
 public static class ProcessTools
 {
-    public static void Elevate()
+    public static void CheckUserGroup()
     {
-        string path = Assembly.GetExecutingAssembly().Location;
-        path = path.Substring(0, path.Length - 3);
-        path += "exe";
-        ProcessStartInfo startInfo = new ProcessStartInfo(path, " -elevated")
+        var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+
+        if (principal.IsInRole(WindowsBuiltInRole.Administrator))
         {
-            WorkingDirectory = Path.GetDirectoryName(path),
-            Verb = "runas",
-            CreateNoWindow = false,
-            UseShellExecute = false
-        };
-        Process.Start(startInfo);
-        Thread.Sleep(50);
+            return;
+        }
+        Console.WriteLine("请以管理员身份运行此程序");
+        ConsoleTools.Pause();
         Environment.Exit(0);
     }
 
@@ -39,7 +37,7 @@ public static class ProcessTools
             }
             catch (Exception)
             {
-                ;//nothing to do currently
+                //nothing to do currently
             }
         }
         return false;
