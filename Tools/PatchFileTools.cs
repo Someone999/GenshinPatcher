@@ -25,6 +25,6 @@ public static class PatchFileTools
     public static bool Verify(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, HashAlgorithm algorithm)
     {
         string downloadedHash = algorithm.ComputeHash(downloadedBytes).GetHashString();
-        return downloadedHash == patchFileInfo.Hash;
+        return downloadedHash == patchFileInfo.Sha1;
     }
 }

@@ -16,9 +16,6 @@
       <Reference Include="GenshinPatchTools">
         <HintPath>..\GenshinPatchTools\bin\Debug\net6.0-windows\GenshinPatchTools.dll</HintPath>
       </Reference>
-      <Reference Include="GenshinTools">
-        <HintPath>..\GenshinTools\bin\Debug\net6.0-windows\GenshinTools.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

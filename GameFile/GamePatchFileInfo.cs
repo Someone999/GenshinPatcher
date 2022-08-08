@@ -11,8 +11,8 @@ public class GamePatchFileInfo : IGamePatchFileInfo
     [JsonProperty("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
 
-    [JsonProperty("hash")]
-    public string Hash { get; set; } = "";
+    [JsonProperty("sha1")]
+    public string Sha1 { get; set; } = "";
     
     [JsonProperty("clientType")]
     public ClientType ClientType { get; set; }
