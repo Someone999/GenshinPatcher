@@ -8,5 +8,5 @@ public class GameUpdateFiles
     public string LatestVersion { get; private set; } = "";
 
     [JsonProperty("files")]
-    public IGamePatchFileInfo[] Files { get; private set; } = Array.Empty<IGamePatchFileInfo>();
+    public GamePatchFileInfo[] Files { get; private set; } = Array.Empty<GamePatchFileInfo>();
 }

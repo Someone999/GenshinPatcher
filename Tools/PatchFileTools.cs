@@ -13,9 +13,8 @@ public static class PatchFileTools
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("UseAgent", UserAgent.Chrome);
-            string filesUrl = "https://lxzqaq.xyz/index.json";
-            string filesJson = "";
-            filesJson = client.GetStringAsync(filesUrl).Result;
+            string filesUrl = Configs.Config?["updateInfoUrl"].GetValue<string>() ?? "https://2982029868.oss-cn-shanghai.aliyuncs.com/index.json";
+            var filesJson = client.GetStringAsync(filesUrl).Result;
             exception = null;
             return JsonConvert.DeserializeObject<GameUpdateFiles>(filesJson);
         }
@@ -50,6 +49,11 @@ public static class PatchFileTools
     public static bool HasFileOfClientType(ClientType clientType, GameUpdateFiles? gameUpdateFiles = null)
     {
         return (gameUpdateFiles ?? GetUpdateFiles())?.Files.Any(file => file.ClientType == clientType) ?? false;
+    }
+    
+    public static bool HasFileOfVersion(string version, GameUpdateFiles? gameUpdateFiles = null)
+    {
+        return (gameUpdateFiles ?? GetUpdateFiles())?.Files.Any(file => file.Version == version) ?? false;
     }
 
     public static bool Verify(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, HashAlgorithm algorithm)

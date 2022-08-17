@@ -46,14 +46,15 @@ public class Downloader
                 ? BufferSize
                 : (int)total;
             byte[] buffer = new byte[realBufferSize];
+            int readSize;
             do
             {
-                int readSize = netFileStream.Read(buffer, 0, realBufferSize);
+                readSize = netFileStream.Read(buffer, 0, realBufferSize);
                 realSize += readSize;
-                stream.Write(buffer);
+                stream.Write(buffer, 0, readSize);
                 double percent = (double)realSize / total;
                 OnDownloadProgressChanged?.Invoke(percent, realSize, total);
-            } while (realSize < total && realSize == BufferSize);
+            } while (realSize < total && readSize == BufferSize);
             netFileStream.Close();
             stream.Close();
             OnStreamDownloadCompleted?.Invoke(url, stream);

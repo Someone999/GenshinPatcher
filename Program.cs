@@ -1,11 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using GenshinPatcher.Download;
 using GenshinPatcher.GameFile;
 using GenshinPatcher.Tools;
+using GenshinPatchTools.Config;
 using GenshinPatchTools.Game;
 using GenshinPatchTools.Game.Patch;
 
@@ -30,7 +33,6 @@ class Program
             ConsoleTools.Pause();
             return;
         }
-
         string[] tips = {"输入一个数字:", "1.为游戏打补丁", "2.还原游戏文件", "3.获取补丁状态" };
         string[] validOptions = {"1", "2", "3"};
         foreach (var tip in tips)
@@ -65,29 +67,50 @@ class Program
 
     private static void Patch(string fileName, string filePath)
     {
+        Console.WriteLine("请输入游戏版本");
+        string? version = Console.ReadLine();
+        while (string.IsNullOrEmpty(version))
+        {
+            Console.WriteLine("输入的版本无效");
+            version = Console.ReadLine();
+        }
+        string patchFileFolder = Configs.Config?["patchFileFolder"].GetValue<string>() ?? "./patch/files";
+        string patchFileExtractFolder = Configs.Config?["patchExtractFolder"].GetValue<string>() ?? "./patch/files";
+        
+        
+        //测试时不检查是不是管理员和游戏是否正在运行
+        /*
         ProcessTools.CheckUserGroup();
         while (ProcessTools.IsGameRunning(fileName))
         {
             Console.WriteLine("游戏正在运行，请先退出游戏");
             ConsoleTools.Pause();
-        }
+        }*/
         
         GameInfo gameInfo = GameInfo.GetByGameExecutable(filePath);
-        Patcher patcher = new Patcher(gameInfo);
+        Patcher patcher = new Patcher(gameInfo, Path.Combine(patchFileExtractFolder, version));
         
         if (patcher.CheckPatchFiles().IsFailed())
         {
             var gameUpdateFiles = PatchFileTools.GetUpdateFiles();
             if (!PatchFileTools.HasFileOfClientType(gameInfo.ClientType, gameUpdateFiles))
             {
-                Console.WriteLine("找不到所需的补丁文件");
+                Console.WriteLine("不支持的客户端类型");
+                ConsoleTools.Pause();
+                return;
+            }
+            
+            if (!PatchFileTools.HasFileOfVersion(version, gameUpdateFiles))
+            {
+                Console.WriteLine($"找不到版本{version}的补丁文件");
                 ConsoleTools.Pause();
                 return;
             }
 
             Downloader downloader = new Downloader();
             MemoryStream memoryStream = new MemoryStream();
-            IGamePatchFileInfo? updateFileInfo = gameUpdateFiles?.Files.FirstOrDefault(file => file.ClientType == gameInfo.ClientType);
+            IGamePatchFileInfo? updateFileInfo = 
+                gameUpdateFiles.Files.FirstOrDefault(file => file.ClientType == gameInfo.ClientType && version == file.Version);
             if (updateFileInfo == null)
             {
                 Console.WriteLine("找不到所需的补丁文件");
@@ -96,7 +119,7 @@ class Program
             }
             Console.WriteLine("开始下载文件");
             int retryCount = 0;
-            downloader.OnDownloadFailed += (url, exception) =>
+            downloader.OnDownloadFailed += (_, _) =>
             {
                 retryCount++;
                 if (retryCount < downloader.MaxRetry)
@@ -112,19 +135,24 @@ class Program
             };
             downloader.OnStreamDownloadCompleted += (_, _) => Console.WriteLine("下载完成"); 
             downloader.Download(updateFileInfo.DownloadUrl, memoryStream);
-            if (!PatchFileTools.Verify(updateFileInfo, memoryStream.GetBuffer(), SHA1.Create()))
+            if (!PatchFileTools.Verify(updateFileInfo, memoryStream.ToArray(), SHA1.Create()))
             {
                 Console.WriteLine("文件验证失败");
                 ConsoleTools.Pause();
                 return;
             }
             string downloadedFileName = $"patch_{updateFileInfo.Version}_{updateFileInfo.ClientType}.zip";
-            FileStream fileStream = File.Create(downloadedFileName);
-            fileStream.Write(memoryStream.GetBuffer());
+            if (!Directory.Exists(patchFileFolder))
+            {
+                Directory.CreateDirectory(patchFileFolder);
+            }
+            FileStream fileStream = File.Create(Path.Combine(patchFileFolder, downloadedFileName));
+            
+            fileStream.Write(memoryStream.ToArray());
             memoryStream.Close();
             fileStream.Flush();
             
-            ZipProcessor.Extract(new ZipArchive(fileStream, ZipArchiveMode.Read), "./patch/");
+            ZipProcessor.Extract(new ZipArchive(fileStream, ZipArchiveMode.Read), patchFileExtractFolder);
             fileStream.Close();
         }
         var patchResult = patcher.Patch();
@@ -180,12 +208,13 @@ class Program
     
     private static void UnPatch(string fileName, string filePath)
     {
-        ProcessTools.CheckUserGroup();
+        //测试时不检查是不是管理员和游戏是否正在运行
+        /*ProcessTools.CheckUserGroup();
         while (ProcessTools.IsGameRunning(fileName))
         {
             Console.WriteLine("游戏正在运行，请先退出游戏");
             ConsoleTools.Pause();
-        }
+        }*/
         
         GameInfo gameInfo = GameInfo.GetByGameExecutable(filePath);
         Patcher patcher = new Patcher(gameInfo);
@@ -247,7 +276,8 @@ class Program
     
     static void GetPatchState(string fileName, string filePath)
     {
-        var state = new Patcher(GameInfo.GetByGameExecutable(filePath)).GetPatchState();
+        string patchFileExtractFolder = Configs.Config?["patchExtractFolder"].GetValue<string>() ?? "./patch/files";
+        var state = new Patcher(GameInfo.GetByGameExecutable(filePath), patchFileExtractFolder).GetPatchState();
         switch (state)
         {
             case PatchResult.HasPatched:
