@@ -2,12 +2,14 @@
 
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using GenshinPatcher.Download;
 using GenshinPatcher.GameFile;
 using GenshinPatcher.Tools;
+using GenshinPatcher.Tools.Shortcut.Win32.Structure;
 using GenshinPatchTools.Config;
 using GenshinPatchTools.Game;
 using GenshinPatchTools.Game.Patch;
@@ -18,7 +20,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("请将游戏路径复制到控制台窗口");
+        unsafe
+        {
+            var file = File.OpenRead(@"C:\Users\Public\Desktop\腾讯QQ.lnk");
+            byte[] bts = new byte[0x4C];
+            ShellLinkHeader* shellLinkHeader = (ShellLinkHeader*)Marshal.AllocHGlobal(Marshal.SizeOf<ShellLinkHeader>());
+            var readSize = file.Read(bts, 0, 0x4C);
+            Marshal.Copy(bts, 0, new IntPtr(shellLinkHeader), 0x4C);
+        }
+        
+        return;
+        Console.WriteLine("请将游戏文件拖到控制台窗口");
         string? filePath = Console.ReadLine()?.Trim('\"');
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
@@ -135,13 +147,16 @@ class Program
             };
             downloader.OnStreamDownloadCompleted += (_, _) => Console.WriteLine("下载完成"); 
             downloader.Download(updateFileInfo.DownloadUrl, memoryStream);
-            if (!PatchFileTools.Verify(updateFileInfo, memoryStream.ToArray(), SHA1.Create()))
+            
+            if (!PatchFileTools.IsFileHashCheckPass(updateFileInfo, memoryStream.ToArray(), SHA1.Create()))
             {
                 Console.WriteLine("文件验证失败");
                 ConsoleTools.Pause();
                 return;
             }
+            
             string downloadedFileName = $"patch_{updateFileInfo.Version}_{updateFileInfo.ClientType}.zip";
+            
             if (!Directory.Exists(patchFileFolder))
             {
                 Directory.CreateDirectory(patchFileFolder);

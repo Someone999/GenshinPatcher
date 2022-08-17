@@ -56,7 +56,7 @@ public static class PatchFileTools
         return (gameUpdateFiles ?? GetUpdateFiles())?.Files.Any(file => file.Version == version) ?? false;
     }
 
-    public static bool Verify(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, HashAlgorithm algorithm)
+    public static bool IsFileHashCheckPass(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, HashAlgorithm algorithm)
     {
         string downloadedHash = algorithm.ComputeHash(downloadedBytes).GetHashString();
         return downloadedHash == patchFileInfo.Sha1;

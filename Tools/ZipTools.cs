@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace GenshinPatcher;
+namespace GenshinPatcher.Tools;
 
 public static class ZipProcessor
 {
@@ -28,6 +28,7 @@ public static class ZipProcessor
             
             var archiveFileStream = archiveEntry.Open();
             long bufferSize = 8192, total = archiveEntry.Length, readSize = 0;
+            MemoryStream tempMemoryStream = new MemoryStream();
             FileStream targetFile = File.Create(fullPath);
             byte[] buffer = new byte[bufferSize];
             Console.WriteLine($"正在解压文件: {fullName}");
@@ -35,10 +36,23 @@ public static class ZipProcessor
             {
                 int realReadSize = archiveFileStream.Read(buffer);
                 readSize += realReadSize;
-                targetFile.Write(buffer);
+                tempMemoryStream.Write(buffer, 0, realReadSize);
 
             } while (readSize < total);
-            targetFile.Close();
+            
+            if (!Crc32Tools.IsCrc32CheckPass(tempMemoryStream.ToArray(), archiveEntry.Crc32))
+            {
+                Console.WriteLine("文件验证失败");
+                archive.Dispose();
+                tempMemoryStream.Dispose();
+                targetFile.Dispose();
+                FileTools.RecurseDelete(directory);
+                Directory.Delete(directory);
+                break;
+            }
+            
+            targetFile.Write(tempMemoryStream.ToArray());
+            targetFile.Dispose();
         }
     }
 }
