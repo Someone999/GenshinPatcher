@@ -1,21 +1,5 @@
 ﻿namespace GenshinPatcher.Tools.Shortcut.Win32.Structure;
 
-public class IdItem
-{
-    public short Size { get; }
-    public byte[] Data { get; }
-    public IdItem(short size, byte[] data)
-    {
-        Size = size;
-        Data = data;
-    }
-}
-
-public class IdList
-{
-    public List<IdItem> IdItems { get; } = new List<IdItem>();
-}
-
 public class LinkTargetIdList
 {
     public short IdListSize { get; private set; }
