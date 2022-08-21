@@ -6,8 +6,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Security.Principal;
+using System.Text;
+using Force.Crc32;
 using GenshinPatcher.Download;
 using GenshinPatcher.GameFile;
+using GenshinPatcher.HashAlgorithmWrapper;
+using GenshinPatcher.Reflection;
 using GenshinPatcher.Tools;
 using GenshinPatcher.Tools.Shortcut.Win32.Structure;
 using GenshinPatchTools.Config;
@@ -20,16 +24,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        unsafe
+        //不要删掉这些，之后测试要用
+        /*unsafe
         {
             var file = File.OpenRead(@"C:\Users\Public\Desktop\腾讯QQ.lnk");
             byte[] bts = new byte[0x4C];
             ShellLinkHeader* shellLinkHeader = (ShellLinkHeader*)Marshal.AllocHGlobal(Marshal.SizeOf<ShellLinkHeader>());
             var readSize = file.Read(bts, 0, 0x4C);
             Marshal.Copy(bts, 0, new IntPtr(shellLinkHeader), 0x4C);
-        }
+        }*/
         
-        return;
+        
         Console.WriteLine("请将游戏文件拖到控制台窗口");
         string? filePath = Console.ReadLine()?.Trim('\"');
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -148,7 +153,7 @@ class Program
             downloader.OnStreamDownloadCompleted += (_, _) => Console.WriteLine("下载完成"); 
             downloader.Download(updateFileInfo.DownloadUrl, memoryStream);
             
-            if (!PatchFileTools.IsFileHashCheckPass(updateFileInfo, memoryStream.ToArray(), SHA1.Create()))
+            if (!PatchFileTools.IsFileHashCheckPass(updateFileInfo, memoryStream.ToArray(), ComparableHashFactory.Default))
             {
                 Console.WriteLine("文件验证失败");
                 ConsoleTools.Pause();

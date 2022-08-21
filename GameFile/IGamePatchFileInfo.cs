@@ -6,6 +6,6 @@ public interface IGamePatchFileInfo
 {
     string Version { get; set; }
     string DownloadUrl { get; set; }
-    string Sha1 { get; set; }
+    string Hash { get; }
     ClientType ClientType { get; set; }
 }

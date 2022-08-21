@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using GenshinPatcher.GameFile;
+using GenshinPatcher.HashAlgorithmWrapper;
 using GenshinPatchTools.Game;
 using Newtonsoft.Json;
 
@@ -56,9 +57,9 @@ public static class PatchFileTools
         return (gameUpdateFiles ?? GetUpdateFiles())?.Files.Any(file => file.Version == version) ?? false;
     }
 
-    public static bool IsFileHashCheckPass(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, HashAlgorithm algorithm)
+    public static bool IsFileHashCheckPass(IGamePatchFileInfo patchFileInfo, byte[] downloadedBytes, IComparableHash comparableHash)
     {
-        string downloadedHash = algorithm.ComputeHash(downloadedBytes).GetHashString();
-        return downloadedHash == patchFileInfo.Sha1;
+        string downloadedHash = comparableHash.Compute(downloadedBytes).ConvertToString();
+        return downloadedHash == patchFileInfo.Hash;
     }
 }
