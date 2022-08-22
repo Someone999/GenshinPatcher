@@ -2,6 +2,10 @@
 
 namespace GenshinPatcher.HashAlgorithmWrapper;
 
+
+/// <summary>
+/// 包装了Sha1算法
+/// </summary>
 public class Sha1ComparableHash: IComparableHash<byte[]>
 {
 

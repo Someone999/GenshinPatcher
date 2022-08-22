@@ -4,6 +4,12 @@ namespace GenshinPatcher.Tools;
 
 public static class ZipProcessor
 {
+    /// <summary>
+    /// 将指定的zip压缩文件解压到指定目录
+    /// </summary>
+    /// <param name="archive">压缩文件</param>
+    /// <param name="directory">目录</param>
+    /// <exception cref="InvalidOperationException">创建文件夹时，<see cref="Path.GetDirectoryName(string)"/>的返回值为null</exception>
     public static void Extract(ZipArchive archive, string directory)
     {
         if (!Directory.Exists(directory))
@@ -24,6 +30,11 @@ public static class ZipProcessor
             {
                 Directory.CreateDirectory(fullPath);
                 continue;
+            }
+
+            if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath) ?? throw new InvalidOperationException("指定的目录无效"));
             }
             
             var archiveFileStream = archiveEntry.Open();

@@ -3,5 +3,5 @@
 public class SerializedPropertyStore
 {
     public int StoreSize;
-    public List<SerializedPropertyStorage> Storage;
+    public List<SerializedPropertyStorage> Storage = new List<SerializedPropertyStorage>();
 }

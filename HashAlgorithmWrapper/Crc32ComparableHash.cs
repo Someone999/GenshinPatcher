@@ -3,6 +3,9 @@ using Force.Crc32;
 
 namespace GenshinPatcher.HashAlgorithmWrapper;
 
+/// <summary>
+/// 包装了Crc32算法的
+/// </summary>
 public class Crc32ComparableHash : IComparableHash<uint>
 {
     public HashAlgorithm HashAlgorithm { get; } = new Crc32Algorithm();

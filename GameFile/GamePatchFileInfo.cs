@@ -11,10 +11,10 @@ public class GamePatchFileInfo : IGamePatchFileInfo
     [JsonProperty("downloadUrl")]
     public string DownloadUrl { get; set; } = "";
 
-    public string Hash => Crc32;
+    public string Hash => Sha1;
 
-    [JsonProperty("crc32")]
-    public string Crc32 { get; set; } = "";
+    [JsonProperty("sha1")]
+    public string Sha1 { get; set; } = "";
     
     [JsonProperty("clientType")]
     public ClientType ClientType { get; set; }

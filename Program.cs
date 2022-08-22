@@ -17,6 +17,8 @@ using GenshinPatcher.Tools.Shortcut.Win32.Structure;
 using GenshinPatchTools.Config;
 using GenshinPatchTools.Game;
 using GenshinPatchTools.Game.Patch;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GenshinPatcher;
 
@@ -33,8 +35,6 @@ class Program
             var readSize = file.Read(bts, 0, 0x4C);
             Marshal.Copy(bts, 0, new IntPtr(shellLinkHeader), 0x4C);
         }*/
-        
-        
         Console.WriteLine("请将游戏文件拖到控制台窗口");
         string? filePath = Console.ReadLine()?.Trim('\"');
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))

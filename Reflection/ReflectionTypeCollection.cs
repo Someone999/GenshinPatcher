@@ -33,11 +33,22 @@ public class ReflectionTypeCollection : IEnumerable<Type>
         _types = new List<Type>(types);
     }
     
+    /// <summary>
+    /// 获取指定类型的子类型
+    /// </summary>
+    /// <param name="parentType">父类型</param>
+    /// <returns>所有的子类型</returns>
     public Type[] GetSubTypesOf(Type parentType)
     {
         var m = from t in _types where parentType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract select t;
         return m.ToArray();
     }
+    
+    /// <summary>
+    /// 获取指定类型的子类型
+    /// </summary>
+    /// <typeparam name="T">父类型</typeparam>
+    /// <returns>所有的子类型</returns>
 
     public Type[] GetSubTypesOf<T>() => GetSubTypesOf(typeof(T));
 

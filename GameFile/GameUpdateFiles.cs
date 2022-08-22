@@ -5,8 +5,8 @@ namespace GenshinPatcher.GameFile;
 public class GameUpdateFiles
 {
     [JsonProperty("latestVersion")]
-    public string LatestVersion { get; private set; } = "";
+    public string LatestVersion { get; internal set; } = "";
 
     [JsonProperty("files")]
-    public GamePatchFileInfo[] Files { get; private set; } = Array.Empty<GamePatchFileInfo>();
+    public GamePatchFileInfo[] Files { get; internal set; } = Array.Empty<GamePatchFileInfo>();
 }

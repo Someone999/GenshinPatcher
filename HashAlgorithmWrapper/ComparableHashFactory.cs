@@ -34,5 +34,5 @@ public static class ComparableHashFactory
             : null;
     }
 
-    public static IComparableHash Default { get; } = new Crc32ComparableHash();
+    public static IComparableHash Default { get; } = new Sha1ComparableHash();
 }
