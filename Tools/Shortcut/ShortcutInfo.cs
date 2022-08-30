@@ -9,4 +9,9 @@ public class ShortcutInfo
     public LinkInfo LinkInfo { get; } = new LinkInfo();
     public StringData StringData { get; } = new StringData();
     public ExtraData ExtraData { get; } = new ExtraData();
+
+    public ShortcutInfo(string file)
+    {
+        
+    }
 }

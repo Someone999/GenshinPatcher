@@ -18,4 +18,7 @@ public class GamePatchFileInfo : IGamePatchFileInfo
     
     [JsonProperty("clientType")]
     public ClientType ClientType { get; set; }
+
+    [JsonProperty("downloadPath")]
+    public string DownloadPath { get; set; } = "";
 }

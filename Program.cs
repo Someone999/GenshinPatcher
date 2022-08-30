@@ -26,15 +26,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        //不要删掉这些，之后测试要用
-        /*unsafe
-        {
-            var file = File.OpenRead(@"C:\Users\Public\Desktop\腾讯QQ.lnk");
-            byte[] bts = new byte[0x4C];
-            ShellLinkHeader* shellLinkHeader = (ShellLinkHeader*)Marshal.AllocHGlobal(Marshal.SizeOf<ShellLinkHeader>());
-            var readSize = file.Read(bts, 0, 0x4C);
-            Marshal.Copy(bts, 0, new IntPtr(shellLinkHeader), 0x4C);
-        }*/
         Console.WriteLine("请将游戏文件拖到控制台窗口");
         string? filePath = Console.ReadLine()?.Trim('\"');
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
